@@ -23,3 +23,39 @@
     # Fin Pour
     # Retourner β
 # Fin Fonction
+
+import Goban
+
+def evaluate(board: Goban.Board) -> int:
+    if board.is_game_over():
+        if board.winner == Goban.Board._WHITE:
+            return 100000
+        elif board.winner == Goban.Board._BLACK:
+            return -100000
+        else:
+            return 0
+    return board._nbWHITE - board._nbBLACK
+
+def max_value(board: Goban.Board, alpha: int, beta: int, depth: int) -> int:
+    # print("Depth: ", depth, "Alpha: ", alpha, "Beta: ", beta)
+    if board.is_game_over() or depth == 0:
+        return evaluate(board)
+    for move in board.legal_moves():
+        board.push(move)
+        alpha = max(alpha, min_value(board, alpha, beta, depth-1))
+        board.pop()
+        if alpha >= beta:
+            return beta
+    return alpha
+
+def min_value(board: Goban.Board, alpha: int, beta: int, depth) -> int:
+    # print("Depth: ", depth, "Alpha: ", alpha, "Beta: ", beta)
+    if board.is_game_over() or depth == 0:
+        return evaluate(board)
+    for move in board.legal_moves():
+        board.push(move)
+        beta = min(beta, max_value(board, alpha, beta, depth-1))
+        board.pop()
+        if alpha >= beta:
+            return alpha
+    return beta
