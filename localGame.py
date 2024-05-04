@@ -13,7 +13,7 @@ player1 = myPlayer.myPlayer()
 player1.newGame(Goban.Board._BLACK)
 players.append(player1)
 
-player2 = alphabetaPlayer.testPlayer()
+player2 = alphabetaPlayer.myPlayer()
 player2.newGame(Goban.Board._WHITE)
 players.append(player2)
 
