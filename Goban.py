@@ -50,6 +50,50 @@ class Board:
 
     ##########################################################
     ##########################################################
+
+    def get_number_of_stones(self):
+        return np.count_nonzero(self._board != self._EMPTY)
+
+    def calculate_liberties(self):
+        black_liberties = 0
+        white_liberties = 0
+        
+        counted_strings = set()
+
+        # Explorer chaque position sur le plateau
+        for fcoord in range(self._BOARDSIZE**2):
+            stone = self._board[fcoord]
+            if stone not in (self._BLACK, self._WHITE):
+                continue
+            
+            # Obtenir l'identifiant de la chaîne pour cette pierre
+            string_id = self._getStringOfStone(fcoord)
+            if string_id in counted_strings:
+                continue  # Cette chaîne a déjà été comptée
+            
+            counted_strings.add(string_id)
+            
+            if stone == self._BLACK:
+                black_liberties += self._stringLiberties[string_id]
+            elif stone == self._WHITE:
+                white_liberties += self._stringLiberties[string_id]
+
+        # Renvoyer le compte des libertés pour chaque couleur
+        liberties_count = {
+            Board._BLACK : black_liberties,
+            Board._WHITE : white_liberties
+        }
+        
+        return liberties_count
+
+# Exemple d'utilisation:
+# board_instance = Board()
+# liberties = board_instance.calculate_liberties()
+# print("Black liberties:", liberties['black'])
+# print("White liberties:", liberties['white'])
+
+
+    ##########################################################
     ''' A set of functions to manipulate the moves from the
     - internal representation, called "flat", in 1D (just integers)
     - coord representation on the board (0,0)..(_BOARDSIZE, _BOARDSIZE)
@@ -471,7 +515,7 @@ class Board:
     def _getStringOfStone(self, fcoord):
         # In the union find structure, it is important to route all the nodes to the root
         # when querying the node. But in Python, using the successive array is really costly
-        # so this is not so clear that we need to use the successive collection of nodes
+        # so this is not so clear that we need to use the successive collection_ of nodes
         # Moreover, not rerouting the nodes may help for backtracking on the structure 
         successives = []
         while self._stringUnionFind[fcoord] != -1:

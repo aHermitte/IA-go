@@ -4,16 +4,20 @@ import myPlayer
 import time
 from io import StringIO
 import sys
-import alphabetaPlayer
+import players.GoGoGadget as GoGoGadget
+import players.newMT as newMT
+import players.randomPlayer as randomPlayer
+import players.rodriGO as rodriGO
+import gnugoPlayer
 
 b = Goban.Board()
 
 players = []
-player1 = myPlayer.myPlayer()
+player1 = GoGoGadget.myPlayer()
 player1.newGame(Goban.Board._BLACK)
 players.append(player1)
 
-player2 = alphabetaPlayer.myPlayer()
+player2 = rodriGO.myPlayer()
 player2.newGame(Goban.Board._WHITE)
 players.append(player2)
 
@@ -28,6 +32,11 @@ stringio = StringIO()
 wrongmovefrom = 0
 
 while not b.is_game_over():
+
+    if(totalTime[0] > 1800 or totalTime[1] > 1800):
+        print("Ran out of time")
+        break
+
     print("Referee Board:")
     b.prettyPrint() 
     print("Before move", nbmoves)
